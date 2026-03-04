@@ -12,39 +12,63 @@ Interactive bash script to install and register a GitLab Runner with a Docker ex
 ## What it does
 
 - Adds the official GitLab Runner apt repository
-- Installs `gitlab-runner`, `docker.io`, and `docker-compose`
+- Installs Docker CE from Docker's official repository (includes Compose v2)
+- Installs `gitlab-runner`
 - Adds the `gitlab-runner` user to the `docker` group
 - Registers the runner with your GitLab instance (Docker executor, privileged mode, docker socket mounted)
 - Enables and starts the `gitlab-runner` systemd service
 - Verifies the runner is connected
 
-The script is idempotent — it skips steps that have already been completed (existing apt repo, existing registration).
+The script is idempotent — it skips steps that have already been completed (existing apt repo, existing Docker install, existing registration).
 
 ## Prerequisites
 
 - Debian or Ubuntu VM
 - Root access (run with `sudo`)
-- Network access to your GitLab instance and `packages.gitlab.com`
+- Network access to your GitLab instance, `packages.gitlab.com`, and `download.docker.com`
 - A GitLab Runner registration token (from your GitLab project or group settings under **Settings > CI/CD > Runners**)
 
 ## Usage
+
+All options can be passed as flags, prompted interactively, or mixed. Any option not provided via a flag will be prompted.
+
+```
+Usage: install-runner.sh [OPTIONS]
+
+Options:
+  -u, --url URL        GitLab instance URL (default: https://gitlab.example.com)
+  -t, --token TOKEN    Runner registration token (required)
+  -n, --name NAME      Runner description/name (default: <hostname>-runner)
+  -T, --tags TAGS      Comma-separated runner tags (default: docker)
+  -d, --debug          Enable debug/verbose output
+  -y, --yes            Skip confirmation prompt
+  -h, --help           Show help message
+```
+
+### Interactive mode
 
 ```bash
 sudo ./install-runner.sh
 ```
 
-The script will prompt for:
+### Non-interactive mode
 
-| Prompt | Default | Description |
-|---|---|---|
-| GitLab instance URL | `https://gitlab.example.com` | Your GitLab server URL |
-| Registration token | *(none, required)* | Runner token from GitLab CI/CD settings |
-| Runner name | `<hostname>-runner` | Description shown in GitLab UI |
-| Runner tags | `docker` | Comma-separated tags for job matching |
+```bash
+sudo ./install-runner.sh \
+  -u https://gitlab.mycompany.com \
+  -t glrt-xxxxxxxxxxxx \
+  -n my-runner \
+  -T docker,deploy \
+  -y
+```
 
-A confirmation summary is shown before any changes are made.
+### Debug mode
 
-### Example
+```bash
+sudo ./install-runner.sh -d
+```
+
+### Example session
 
 ```
 $ sudo ./install-runner.sh
@@ -62,12 +86,6 @@ Comma-separated tags [docker]: docker,deploy,production
 [INFO]    Docker image:  alpine:latest
 
 Proceed with installation? [Y/n]: y
-```
-
-### Help
-
-```bash
-./install-runner.sh --help
 ```
 
 ## Runner configuration
