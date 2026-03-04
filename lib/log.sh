@@ -4,9 +4,9 @@
 # Dependencies: bash 4+
 set -euo pipefail
 
-readonly LOG_FORMAT="${DEVRAIL_LOG_FORMAT:-human}"
-readonly LOG_QUIET="${DEVRAIL_QUIET:-0}"
-readonly LOG_DEBUG_ENABLED="${DEVRAIL_DEBUG:-0}"
+LOG_FORMAT="${DEVRAIL_LOG_FORMAT:-human}"
+LOG_QUIET="${DEVRAIL_QUIET:-0}"
+LOG_DEBUG_ENABLED="${DEVRAIL_DEBUG:-0}"
 
 _log() {
   local level="$1"
