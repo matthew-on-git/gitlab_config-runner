@@ -117,7 +117,7 @@ log_info "GitLab Runner installed"
 
 # --- Step 3: Install Docker ---
 log_info "Installing Docker..."
-apt-get install -y -qq docker.io docker-compose
+apt-get install -y -qq docker.io docker-compose-plugin
 log_info "Docker installed"
 
 # --- Step 4: Add gitlab-runner user to docker group ---
